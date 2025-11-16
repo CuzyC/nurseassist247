@@ -26,6 +26,7 @@ import {
   Smile,
 } from "lucide-react";
 import NavBar from "../components/NavigationBar";
+import Footer from "../components/Footer";
 
 const slugify = (str) =>
   str
@@ -341,6 +342,8 @@ function PropertyDetails() {
           </div>
         </div>
       </div>
+
+      <Footer />
     </div>
   );
 }

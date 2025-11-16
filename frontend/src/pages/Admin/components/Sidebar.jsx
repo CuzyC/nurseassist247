@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import logo from "@/assets/logo.png";
-import { Home, Building2, Users, LogOut } from "lucide-react";
+import { Home, Activity, Users, LogOut } from "lucide-react";
 
 function Sidebar({ currentPage, onNavigate, isOpen, onToggle }) {
   const navigate = useNavigate();
@@ -9,7 +9,7 @@ function Sidebar({ currentPage, onNavigate, isOpen, onToggle }) {
 
   const navItems = [
     { id: "dashboard", label: "Dashboard", icon: Home },
-    { id: "accommodations", label: "Accommodations", icon: Building2 },
+    { id: "sda_log", label: "SDA Log", icon: Activity },
     { id: "admins", label: "Users", icon: Users },
   ];
 
@@ -51,7 +51,7 @@ function Sidebar({ currentPage, onNavigate, isOpen, onToggle }) {
                   onNavigate(item.id);
                   onToggle && onToggle();
                 }}
-                className={`w-full flex items-center gap-3 rounded px-4 py-3 transition-colors ${
+                className={`w-full flex items-center gap-3 rounded-lg px-4 py-3 transition-colors ${
                   isActive
                     ? "bg-[#D2138C] text-white"
                     : "text-gray-700 hover:bg-gray-100"

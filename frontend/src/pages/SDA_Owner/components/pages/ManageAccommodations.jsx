@@ -17,7 +17,7 @@ import AccommodationModal from "@/components/modal/AccommodationModal";
 import DeleteConfirmDialog from "@/components/modal/DeleteConfirmDialog";
 import ViewAccommodationModal from "@/components/modal/ViewAccommodationModal";
 
-function ManageAccommodations() {
+function ManageAccommodations({ openAddFromDashboard, onAddHandled }) {
   const [accommodations, setAccommodations] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [openModal, setOpenModal] = useState(false);
@@ -66,6 +66,20 @@ function ManageAccommodations() {
   useEffect(() => {
     fetchAccommodations();
   }, []);
+
+  // open the Add Accommodation modal when navigated from dashboard
+  useEffect(() => {
+    if (openAddFromDashboard) {
+      // ensure it's in "add" mode
+      setSelectedAccommodation(null);
+      setOpenModal(true);
+
+      // tell the portal we've handled it so it doesn't reopen on every render
+      if (onAddHandled) {
+        onAddHandled();
+      }
+    }
+  }, [openAddFromDashboard, onAddHandled]);
 
   // Filter accommodations
   const filteredAccommodations = accommodations.filter((acc) => {
@@ -198,9 +212,6 @@ function ManageAccommodations() {
                     Gender
                   </TableHead>
                   <TableHead className="text-center text-black">
-                    Support Level
-                  </TableHead>
-                  <TableHead className="text-center text-black">
                     Features
                   </TableHead>
                   <TableHead className="text-center text-black">
@@ -248,7 +259,6 @@ function ManageAccommodations() {
                         <TableCell>{acc.bedrooms}</TableCell>
                         <TableCell>{acc.bathrooms}</TableCell>
                         <TableCell>{acc.gender}</TableCell>
-                        <TableCell>{acc.supportLevel}</TableCell>
 
                         {/* Features */}
                         <TableCell className="min-w-[200px]">

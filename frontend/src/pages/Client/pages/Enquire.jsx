@@ -22,6 +22,8 @@ import {
   ArrowLeft,
 } from "lucide-react";
 
+import Footer from "../components/Footer";
+
 // same slugify logic as PropertyDetails
 const slugify = (str) =>
   str
@@ -212,7 +214,10 @@ function Enquire() {
           </div>
         </div>
       </div>
+
+      <Footer />
     </div>
+    
   );
 }
 

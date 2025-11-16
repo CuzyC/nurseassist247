@@ -6,38 +6,33 @@ import Sidebar from "./components/Sidebar";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
 import Dashboard from "./components/pages/Dashboard";
-import ManageAccommodations from "./components/pages/ManageAccommodations";
+import SDA_Log from "./components/pages/SDA_Log";
 import ManageAdmins from "./components/pages/ManageUsers";
 
 function AdminDashboard() {
   const [currentPage, setCurrentPage] = useState("dashboard");
 
   const pageConfig = {
-    dashboard: { title: "Admin Dashboard", component: Dashboard },
-    accommodations: {
-      title: "Manage Accommodations",
-      component: ManageAccommodations,
-    },
-    admins: { title: "Manage Users", component: ManageAdmins },
+    dashboard: { title: "Dashboard", component: Dashboard },
+    sda_log: { title: "SDA Activity Log", component: SDA_Log, },
+    admins: { title: "Users", component: ManageAdmins },
   };
 
   const { component: CurrentPageComponent, title: pageTitle } =
     pageConfig[currentPage] || pageConfig.dashboard;
 
   return (
-    <div className="flex min-h-screen bg-gray-50 lg:px-20 lg:py-4 md:px-10 md:py-3 sm:px-5 sm:py-2">
+    <div className="min-h-screen flex bg-gray-50 overflow-hidden">
       {/* Sidebar on the left */}
-      <aside className="hidden md:block text-white w-64">
+      <aside className="fixed top-0 left-0 h-full w-74 bg-white border-r border-gray-200 z-50 transform transition-transform duration-300">
         <Sidebar
           currentPage={currentPage}
           onNavigate={setCurrentPage}
-          // isOpen={sidebarOpen}
-          // onToggle={toggleSidebar}
         />
       </aside>
 
       {/* Main content area */}
-      <div className="flex flex-col flex-1 min-w-0 ">
+      <div className="flex flex-col flex-1 ml-0 md:ml-74 min-w-0">
         <header>
           <Header pageTitle={pageTitle} userRole="Owner" userName="Admin" />
         </header>

@@ -155,12 +155,6 @@ function PropertyCard({ property, onClick }) {
             variant="secondary"
             className="bg-[#D2138C] hover:bg-[#D2138C] text-white text-xs px-2 py-0.5"
           >
-            {property.supportLevel}
-          </Badge>
-          <Badge
-            variant="outline"
-            className="text-gray-600 text-xs px-2 py-0.5"
-          >
             {property.propertyType}
           </Badge>
         </div>

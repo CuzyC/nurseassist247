@@ -49,16 +49,10 @@ export default function Home() {
                 Properties
               </a>
               <a
-                href="#"
+                href="https://nurseassist247.com.au/our-values/"
                 className="text-foreground hover:text-[#D2138C] transition-colors"
               >
                 About Us
-              </a>
-              <a
-                href="#"
-                className="text-foreground hover:text-[#D2138C] transition-colors"
-              >
-                What We Do
               </a>
             </div>
 
@@ -67,6 +61,7 @@ export default function Home() {
               <Button
                 variant="default"
                 className="bg-[#D2138C] hover:bg-pink-700 rounded-full text-white"
+                onClick={() => navigate('/contact')}
               >
                 Contact Us
               </Button>

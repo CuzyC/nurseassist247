@@ -9,125 +9,7 @@ import PropertyCard from "../components/PropertyCard";
 import NavBar from "../components/NavigationBar";
 import FilterPanel from "../components/FilterPanel";
 
-// const PropertyLists = [
-//   {
-//     id: "1",
-//     title: "Tranquil Loop Baldivis",
-//     location: "38 Tranquil Loop Baldivis",
-//     capacity: 2,
-//     gender: "Men",
-//     image:
-//       "https://nurseassist247.com.au/wp-content/uploads/2025/05/38-Tranquil-Lp-Baldivis-24-scaled.jpg",
-//     images: [
-//       "https://nurseassist247.com.au/wp-content/uploads/2025/05/38-Tranquil-Lp-Baldivis-07-scaled.jpg",
-//       "https://nurseassist247.com.au/wp-content/uploads/2025/05/38-Tranquil-Lp-Baldivis-10-scaled.jpg",
-//       "https://nurseassist247.com.au/wp-content/uploads/2025/05/38-Tranquil-Lp-Baldivis-14-scaled.jpg",
-//       "https://nurseassist247.com.au/wp-content/uploads/2025/05/38-Tranquil-Lp-Baldivis-15-scaled.jpg",
-//       "https://nurseassist247.com.au/wp-content/uploads/2025/05/38-Tranquil-Lp-Baldivis-20-scaled.jpg",
-//       "https://nurseassist247.com.au/wp-content/uploads/2025/05/38-Tranquil-Lp-Baldivis-231-scaled.jpg",
-//       "https://nurseassist247.com.au/wp-content/uploads/2025/05/38-Tranquil-Lp-Baldivis-28-scaled.jpg",
-//     ],
-//     description:
-//       "Beautiful modern apartment specifically designed for high physical support needs. Features wide doorways, automated systems, and premium accessibility features throughout.",
-//     features: [
-//       "Wheelchair accessible throughout",
-//       "Automated door systems",
-//       "Emergency call buttons in all rooms",
-//       "Height-adjustable kitchen counters",
-//       "Roll-in shower with seat",
-//       "Smart home integration",
-//       "Ceiling hoists in bedroom and bathroom",
-//       "Wide hallways and doorways",
-//     ],
-//     supportLevel: "High Physical Support",
-//     propertyType: "House",
-//     amenities: [
-//       "Close to public transport",
-//       "Near medical facilities",
-//       "Shopping centers within 500m",
-//       "Parks and recreation areas",
-//       "On-site parking",
-//       "Elevator access",
-//     ],
-//     bedrooms: 2,
-//     bathrooms: 2,
-//     available: false,
-//   },
-//   {
-//     id: "2",
-//     title: "Shoalwater Modern Villas",
-//     location: "50 Penguin Road",
-//     capacity: 7,
-//     gender: "Men & Women",
-//     image:
-//       "https://nurseassist247.com.au/wp-content/uploads/2025/04/2x2-Unit-50-Penguin-Rd-Shoalwater-1-scaled.jpg",
-//     images: [
-//       "https://nurseassist247.com.au/wp-content/uploads/2025/04/2x2-Unit-50-Penguin-Rd-Shoalwater-4-scaled.jpg",
-//       "https://nurseassist247.com.au/wp-content/uploads/2025/04/2x2-Unit-50-Penguin-Rd-Shoalwater-5-scaled.jpg",
-//       "https://nurseassist247.com.au/wp-content/uploads/2025/04/2x2-Unit-50-Penguin-Rd-Shoalwater-6-scaled.jpg",
-//       "https://nurseassist247.com.au/wp-content/uploads/2025/04/2x2-Unit-50-Penguin-Rd-Shoalwater-7-scaled.jpg",
-//       "https://nurseassist247.com.au/wp-content/uploads/2025/04/2x2-Unit-50-Penguin-Rd-Shoalwater-8-scaled.jpg",
-//       "https://nurseassist247.com.au/wp-content/uploads/2025/04/2x2-Unit-50-Penguin-Rd-Shoalwater-14-scaled.jpg",
-//     ],
-//     description:
-//       "A brand new, purpose-built home with exceptional accessibility features and space for up to 3 residents. Perfect for those requiring robust support.",
-//     features: [
-//       "Single-level design",
-//       "Extra-wide corridors",
-//       "Automated lighting and temperature control",
-//       "Reinforced walls for equipment",
-//       "Multiple accessible bathrooms",
-//       "Open-plan living areas",
-//       "Accessible outdoor space",
-//       "On-site support room",
-//     ],
-//     supportLevel: "Robust",
-//     propertyType: "Villa",
-//     amenities: [
-//       "Community center nearby",
-//       "Public transport access",
-//       "Medical services within 1km",
-//       "Shopping facilities",
-//       "Private garden",
-//       "Secure parking",
-//     ],
-//     bedrooms: 7,
-//     bathrooms: 7,
-//     available: true,
-//   },
-//   {
-//     id: "3",
-//     title: "High Physical Support Apartment",
-//     location: "Wellard, Ebrington",
-//     capacity: 3,
-//     gender: "Women",
-//     image:
-//       "https://nurseassist247.com.au/wp-content/uploads/2024/07/Y24-659-136-Ebrington-Rd-003-scaled.jpg",
-//     images: [
-//       "https://nurseassist247.com.au/wp-content/uploads/2024/07/Y24-659-136-Ebrington-Rd-013-scaled.jpg",
-//       "https://nurseassist247.com.au/wp-content/uploads/2024/07/Innaloo-Apartment-bedroom-e1692602378340.jpg",
-//       "https://nurseassist247.com.au/wp-content/uploads/2024/07/Y24-659-136-Ebrington-Rd-008-scaled.jpg",
-//       "https://nurseassist247.com.au/wp-content/uploads/2024/07/Y24-659-136-Ebrington-Rd-021-scaled.jpg",
-//       "https://nurseassist247.com.au/wp-content/uploads/2024/07/Y24-659-136-Ebrington-Rd-015-scaled.jpg",
-//       "https://nurseassist247.com.au/wp-content/uploads/2024/07/Y24-659-136-Ebrington-Rd-020-scaled.jpg",
-//     ],
-//     description:
-//       "Modern villa with full accessibility features in a quiet Brisbane suburb. Designed with comfort and independence in mind.",
-//     features: ["Maintenance Staff", "Private Garden", "Visitor Parking", "Water Storage"],
-//     supportLevel: "Fully Accessible",
-//     propertyType: "Appartment",
-//     amenities: [
-//       "Double Brick",
-//       "Lockable Garage",
-//       "Robust Plaster & Durable Finishes Throughout",
-//       "Safety and Durable Fixtures Throughout",
-//       "Some Shared Spaces/Areas",
-//     ],
-//     bedrooms: 3,
-//     bathrooms: 3,
-//     available: true,
-//   },
-// ];
+import Footer from "../components/Footer";
 
 function Properties() {
   const [viewMode, setViewMode] = useState("grid");
@@ -184,7 +66,6 @@ function Properties() {
             images: validImages,
             description: a.description,
             features: a.features || [],
-            supportLevel: a.supportLevel || a.support_level,
             propertyType:
               a.propertyType ||
               a.accommodationType ||
@@ -387,6 +268,8 @@ function Properties() {
           )}
         </div>
       </div>
+
+      <Footer />
     </div>
   );
 }

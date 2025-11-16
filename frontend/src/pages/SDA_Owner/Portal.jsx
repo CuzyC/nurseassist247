@@ -8,9 +8,10 @@ import Availability from "./components/pages/Availability";
 function SDAOwnerPortal() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [currentPage, setCurrentPage] = useState("dashboard");
+  const [openAddAccommodationFlag, setOpenAddAccommodationFlag] = useState(false);
 
   const pageConfig = {
-    dashboard: { title: "Owner Dashboard", component: OwnerDashboard },
+    dashboard: { title: "Dashboard", component: OwnerDashboard },
     accommodations: {
       title: "Manage Accommodations",
       component: ManageAccommodations,
@@ -57,7 +58,20 @@ function SDAOwnerPortal() {
 
         {/* Page content */}
         <main className="flex-1 p-6 overflow-auto">
-          <CurrentPageComponent />
+          <CurrentPageComponent
+            // For Dashboard: when "Add Accommodation" is clicked
+            onAddAccommodation={() => {
+              setCurrentPage("accommodations");
+              setOpenAddAccommodationFlag(true);
+            }}
+            // NEW: for "Update Accommodation" / "View Locations" etc.
+            onGoToAccommodations={() => {
+              setCurrentPage("accommodations");
+            }}
+            // For ManageAccommodations: flag + reset callback
+            openAddFromDashboard={openAddAccommodationFlag}
+            onAddHandled={() => setOpenAddAccommodationFlag(false)}
+          />
         </main>
       </div>
     </div>

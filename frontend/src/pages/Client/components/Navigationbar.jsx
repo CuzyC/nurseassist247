@@ -17,8 +17,7 @@ function NavBar(){
                     {/* Navigation */}
                     <div className="hidden md:flex items-center gap-4">
                         <a href="/properties" className="text-foreground hover:text-[#D2138C] transition-colors">Properties</a>
-                        <a href="#" className="text-foreground hover:text-[#D2138C] transition-colors">About Us</a>
-                        <a href="#" className="text-foreground hover:text-[#D2138C] transition-colors">What We Do</a>
+                        <a href="https://nurseassist247.com.au/our-values/" className="text-foreground hover:text-[#D2138C] transition-colors">About Us</a>
                     </div>
 
                     {/* Contact Us */}

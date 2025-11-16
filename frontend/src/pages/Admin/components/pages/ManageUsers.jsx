@@ -40,13 +40,15 @@ function ManageUsers() {
   // Fetch accommodation
   const fetchAdmins = async () => {
     try {
-      const response = await fetch(
-        "http://127.0.0.1:5000/api/admin/get_users",
-        {
-          method: "GET",
-          headers: { "Content-Type": "application/json" },
-        }
-      );
+      const token = localStorage.getItem("access"); // get token
+
+      const response = await fetch("http://127.0.0.1:5000/api/admin/get_users", {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,    // ← REQUIRED!
+        },
+      });
 
       if (!response.ok) throw new Error("Failed to fetch admins");
 
@@ -56,6 +58,7 @@ function ManageUsers() {
       console.error("Error fetching admins:", error);
     }
   };
+
 
   useEffect(() => {
     fetchAdmins();
@@ -82,18 +85,18 @@ function ManageUsers() {
   // Confirm delete
   const handleConfirmDelete = async () => {
     try {
-      // const response = await fetch(`http://127.0.0.1:5000/api/admin/delete_admin/${selectedId}`, {
-      //     method: "DELETE",
-      //     headers: { "Content-Type": "application/json" },
-      // });
+      const response = await fetch(`http://127.0.0.1:5000/api/admin/delete_user/${selectedId}`, {
+          method: "DELETE",
+          headers: { "Content-Type": "application/json" },
+      });
 
-      // if (!response.ok) throw new Error("Failed to delete admin");
+      if (!response.ok) throw new Error("Failed to delete user");
 
-      // await fetchAdmins(); //refresh list
+      await fetchAdmins(); //refresh list
 
       console.log("test");
     } catch (error) {
-      console.error("Error deleting admin:", error);
+      console.error("Error deleting user:", error);
     } finally {
       setOpenDeleteDialog(false);
     }
@@ -108,7 +111,7 @@ function ManageUsers() {
             <div className="relative flex-1 max-w-md">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
               <Input
-                placeholder="Search admins..."
+                placeholder="Search users..."
                 className="px-10"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
