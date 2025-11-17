@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, send_from_directory
 from flask_cors import CORS
 
 from config import Config
@@ -33,6 +33,15 @@ def create_app():
     app.register_blueprint(user)
     app.register_blueprint(admin)
     app.register_blueprint(sda_owner)
+
+    # Serve uploaded files under /uploads/<path:filename>
+    @app.route("/uploads/<path:filename>")
+    def serve_uploads(filename):
+        uploads_root = app.config.get("UPLOAD_FOLDER")
+        if not uploads_root:
+            return "Uploads disabled", 404
+        # Security note: ensure UPLOAD_FOLDER path is correct and you want to expose this publicly.
+        return send_from_directory(uploads_root, filename, conditional=True)
 
     # create tables + default owner admin
     with app.app_context():

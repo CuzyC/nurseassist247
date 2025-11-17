@@ -161,7 +161,7 @@ function SDA_Log() {
           </div>
         </CardHeader>
 
-        <CardContent className="p-0">
+        <CardContent>
           {loading ? (
             <div className="p-6">Loading activities…</div>
           ) : error ? (

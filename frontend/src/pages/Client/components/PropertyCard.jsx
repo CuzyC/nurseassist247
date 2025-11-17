@@ -1,4 +1,5 @@
-import { useState } from "react";
+// PropertyCard.jsx
+import { useState, useEffect } from "react";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -12,19 +13,32 @@ import {
   ChevronRight,
 } from "lucide-react";
 
-function PropertyCard({ property, onClick }) {
+function PropertyCard({ property = {}, onClick }) {
   const [currentImage, setCurrentImage] = useState(0);
 
-  const images = property.images || [];
+  // defensive defaults
+  const images = Array.isArray(property.images) ? property.images : [];
   const hasImages = images.length > 0;
   const mainImage = hasImages ? images[currentImage] : null;
+  console.log("Property images:", mainImage);
+
+  const bedrooms = property.bedrooms ?? 0;
+  const bathrooms = property.bathrooms ?? 0;
+  const capacity = property.capacity ?? 1;
+  const gender = property.gender ?? "Not specified";
+  const title = property.title ?? "Untitled";
+
+  // Reset carousel when images change (prevents out-of-range index)
+  useEffect(() => {
+    setCurrentImage(0);
+  }, [images]);
 
   // Status styles for accommodation
   const getStatusStyle = (status) => {
-    switch (status?.toLowerCase()) {
-      case "available":
+    switch (String(status || "").toLowerCase()) {
+      case "vacant":
         return "bg-[#D2138C] hover:bg-[#D2138C] text-white";
-      case "unavailable":
+      case "occupied":
         return "bg-gray-200 hover:bg-gray-200 text-gray-700";
       case "coming soon":
         return "bg-amber-100 hover:bg-amber-100 text-amber-800 border border-amber-200";
@@ -35,7 +49,7 @@ function PropertyCard({ property, onClick }) {
     }
   };
 
-  // Carousel image
+  // Carousel image navigation
   const prevImage = (e) => {
     e.stopPropagation();
     if (!hasImages) return;
@@ -55,7 +69,12 @@ function PropertyCard({ property, onClick }) {
         {mainImage ? (
           <img
             src={mainImage}
-            alt={property.title}
+            alt={`${title} - image ${currentImage + 1}`}
+            loading="lazy"
+            onError={(e) => {
+              e.currentTarget.src =
+                "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='600' height='400'><rect width='100%' height='100%' fill='%23e5e7eb'/><text x='50%' y='50%' dominant-baseline='middle' text-anchor='middle' fill='%236b7280' font-size='20'>No Image</text></svg>";
+            }}
             className="w-full h-full object-cover rounded-2xl transition-all duration-300"
           />
         ) : (
@@ -70,12 +89,14 @@ function PropertyCard({ property, onClick }) {
             <button
               onClick={prevImage}
               className="absolute left-2 top-1/2 -translate-y-1/2 bg-white/70 hover:bg-white text-gray-700 p-1.5 rounded-full shadow transition"
+              aria-label="Previous image"
             >
               <ChevronLeft size={18} />
             </button>
             <button
               onClick={nextImage}
               className="absolute right-2 top-1/2 -translate-y-1/2 bg-white/70 hover:bg-white text-gray-700 p-1.5 rounded-full shadow transition"
+              aria-label="Next image"
             >
               <ChevronRight size={18} />
             </button>
@@ -84,7 +105,10 @@ function PropertyCard({ property, onClick }) {
 
         {/* Dots indicator */}
         {hasImages && images.length > 1 && (
-          <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-1">
+          <div
+            className="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-1"
+            aria-live="polite"
+          >
             {images.map((_, index) => (
               <div
                 key={index}
@@ -99,15 +123,14 @@ function PropertyCard({ property, onClick }) {
         {/* Status badge */}
         <Badge
           className={`absolute top-3 right-3 text-xs font-medium px-2.5 py-0.5 rounded-full shadow-sm ${getStatusStyle(
-            property.status ||
-              (property.available ? "available" : "unavailable")
+            property.status || (property.available ? "vacant" : "occupied")
           )}`}
         >
           {property.status
             ? property.status.charAt(0).toUpperCase() + property.status.slice(1)
             : property.available
-            ? "Available"
-            : "Unavailable"}
+            ? "Vacant"
+            : "Occupied"}
         </Badge>
       </div>
 
@@ -115,48 +138,47 @@ function PropertyCard({ property, onClick }) {
       <div className="p-5">
         {/* Title and Location */}
         <h3 className="text-gray-900 text-base font-semibold mb-1 line-clamp-2">
-          {property.title}
+          {title}
         </h3>
         <div className="flex items-center gap-1 text-xs text-gray-600 mb-3">
           <MapPin className="w-3.5 h-3.5" />
-          <span>{property.location}</span>
+          <span>{property.location ?? "No location"}</span>
         </div>
 
         {/* Details */}
         <div className="flex flex-wrap items-center gap-4 mb-4 text-xs text-gray-700">
           <div className="flex items-center gap-1">
             <BedDouble className="w-3.5 h-3.5" />
-            <span>{property.bedrooms} Bed</span>
+            <span>{bedrooms} Bed</span>
           </div>
           <div className="flex items-center gap-1">
             <Bath className="w-3.5 h-3.5" />
-            <span>{property.bathrooms} Bath</span>
+            <span>{bathrooms} Bath</span>
           </div>
           <div className="flex items-center gap-1">
             <Users className="w-3.5 h-3.5" />
-            <span>
-              {property.capacity}{" "}
-              {property.capacity === 1 ? "person" : "people"}
-            </span>
+            <span>{capacity} {capacity === 1 ? "person" : "people"}</span>
           </div>
           <div className="flex items-center gap-1">
-            {property.gender === "Men & Women" ? (
+            {gender === "Men & Women" ? (
               <Users className="w-3.5 h-3.5" />
             ) : (
               <Smile className="w-3.5 h-3.5" />
             )}
-            <span>{property.gender}</span>
+            <span>{gender}</span>
           </div>
         </div>
 
         {/* Tags */}
         <div className="flex flex-wrap gap-2 mb-4">
-          <Badge
-            variant="secondary"
-            className="bg-[#D2138C] hover:bg-[#D2138C] text-white text-xs px-2 py-0.5"
-          >
-            {property.propertyType}
-          </Badge>
+          {property.propertyType && (
+            <Badge
+              variant="secondary"
+              className="bg-[#D2138C] hover:bg-[#D2138C] text-white text-xs px-2 py-0.5"
+            >
+              {property.propertyType}
+            </Badge>
+          )}
         </div>
 
         {/* Read more */}

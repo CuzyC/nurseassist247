@@ -166,16 +166,15 @@ export default function Home() {
 
       {/* List your property */}
       <section className="w-full">
-        <div className="max-w-5xl mx-auto px-4 py-8 md:py-10 grid md:grid-cols-2 gap-6 items-center">
+        <div className="max-w-5xl mx-auto py-8 md:py-8 grid md:grid-cols-2 items-center">
           <div>
-            <h2 className="text-2xl md:text-3xl font-semibold text-pink-600">
-              Your Accommodation,
-              <br /> Their Next Home
+            <h2 className="text-3xl md:text-4xl font-semibold text-pink-600">
+              Turn your accommodation into their next home
             </h2>
 
-            <p className="mt-3 text-sm md:text-base text-gray-700 max-w-prose">
-              List your SDA property and help participants find safe,
-              independent living spaces.
+            <p className="mt-3 text-md md:text-lg text-gray-700 max-w-prose">
+              List your SDA property so participants, 
+              coordinators and providers can discover it — quick verification, flexible bookings.
             </p>
 
             <div className="mt-4">
@@ -218,92 +217,66 @@ export default function Home() {
         </div>
       </section>
 
-      {/* FAQ */}
-      <section className="w-full">
-        <div className="max-w-6xl mx-auto px-6 py-16">
-          <div className="grid md:grid-cols-2 gap-10">
-            <h2 className="text-3xl font-semibold">Your questions, answered</h2>
+      {/* Testimonials */}
+      <section className="py-16 bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-12">
+            <h2 className="text-gray-900 mb-4 text-3xl font-semibold">What Our Residents Say</h2>
+            <p className="text-gray-600 max-w-2xl mx-auto">
+              Hear from people who have found their perfect home through SDA Living
+            </p>
+          </div>
 
-            <div>
-              <Accordion type="single" collapsible className="w-full">
-                <AccordionItem value="q1" className="border-b border-gray-200">
-                  <AccordionTrigger className="py-5">
-                    Who can list an SDA property?
-                  </AccordionTrigger>
-                  <AccordionContent className="pb-5 text-gray-700">
-                    Lorem ipsum, dolor sit amet consectetur adipisicing elit.
-                    Autem, eveniet voluptate! Debitis consequuntur laudantium
-                    possimus sequi consectetur optio ab temporibus laboriosam
-                    est? Ipsum obcaecati, accusamus nostrum libero cumque neque
-                    minus.
-                  </AccordionContent>
-                </AccordionItem>
+          <div className="grid md:grid-cols-3 gap-8">
+            {[
+              {
+                name: 'John Doe',
+                text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+              },
+              {
+                name: 'John Doe',
+                text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+              },
+              {
+                name: 'John Doe',
+                text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+              }
+            ].map((testimonial, i) => (
+              <div key={i} className="bg-[#f9e2e8]/30 rounded-2xl p-6">
+                <p className="text-gray-600 text-sm leading-relaxed">
+                  "{testimonial.text}"
+                </p>
+                <div className="flex items-center mt-2">
+                  <p className="text-[#D2138C] font-bold">{testimonial.name}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
 
-                <AccordionItem value="q2" className="border-b border-gray-200">
-                  <AccordionTrigger className="py-5">
-                    Is listing my property free?
-                  </AccordionTrigger>
-                  <AccordionContent className="pb-5 text-gray-700">
-                    Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                    Illo ea excepturi fugiat porro aspernatur sunt tempore
-                    blanditiis error earum distinctio quasi doloremque numquam
-                    reprehenderit, voluptatibus optio laboriosam ab saepe
-                    corporis?
-                  </AccordionContent>
-                </AccordionItem>
-
-                <AccordionItem value="q3" className="border-b border-gray-200">
-                  <AccordionTrigger className="py-5">lorem</AccordionTrigger>
-                  <AccordionContent className="pb-5 text-gray-700">
-                    Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                    Sequi nostrum id ex excepturi magni earum maiores debitis
-                    omnis, molestiae eligendi enim dignissimos a impedit
-                    veritatis quos corporis maxime vero blanditiis.
-                  </AccordionContent>
-                </AccordionItem>
-
-                <AccordionItem value="q4" className="border-b border-gray-200">
-                  <AccordionTrigger className="py-5">
-                    Can I edit my listing after publishing?
-                  </AccordionTrigger>
-                  <AccordionContent className="pb-5 text-gray-700">
-                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Aut
-                    quae dolorem assumenda, commodi illum nemo nesciunt, libero
-                    quaerat corrupti, at blanditiis? Placeat repellat aliquam
-                    neque ut iure laborum, odio assumenda?
-                  </AccordionContent>
-                </AccordionItem>
-
-                <AccordionItem value="q5" className="border-b border-gray-200">
-                  <AccordionTrigger className="py-5">
-                    Do I have control over who stays at my property?
-                  </AccordionTrigger>
-                  <AccordionContent className="pb-5 text-gray-700">
-                    Lorem, ipsum dolor sit amet consectetur adipisicing elit.
-                    Veritatis rerum reprehenderit aspernatur nulla vero fuga
-                    possimus alias architecto, suscipit maiores minima beatae,
-                    molestiae vitae est illum quasi dolorum facere quo?
-                  </AccordionContent>
-                </AccordionItem>
-              </Accordion>
-
-              <p className="mt-8 text-sm text-gray-600">
-                Still have questions? Check out our{" "}
-                <a
-                  className="text-pink-600 font-medium hover:underline"
-                  href="#"
-                >
-                  FAQ
-                </a>{" "}
-                or reach out to us at{" "}
-                <a
-                  className="text-pink-600 font-medium hover:underline"
-                  href="mailto:admin@nurseassist247.com.au"
-                >
-                  admin@nurseassist247.com.au
-                </a>
-              </p>
-            </div>
+      {/* CTA Section */}
+      <section className="py-16 bg-gradient-to-r from-[#f9e2e8] to-[#fce8ed]">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <h2 className="text-gray-900 mb-4 font-semibold text-lg">Ready to Find Your Perfect Home?</h2>
+          <p className="text-gray-600 mb-8 max-w-2xl mx-auto">
+            Browse our complete selection of accessible properties or get in touch with our team
+            for personalized assistance in finding the right SDA home for you.
+          </p>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <Button
+              onClick={() => navigate('/properties')}
+              className="bg-[#D2138C] hover:bg-pink-700 text-white rounded-xl px-8"
+            >
+              Browse Properties
+            </Button>
+            <Button
+              onClick={() => navigate('/contact')}
+              variant="outline"
+              className="rounded-xl border-[#D2138C] text-[#D2138C] hover:text-[#950E64] hover:border-[#950E64]"
+            >
+              Contact Us
+            </Button>
           </div>
         </div>
       </section>

@@ -72,6 +72,22 @@ function PropertyDetails() {
     setCurrentImage((prev) => (prev === 0 ? images.length - 1 : prev - 1));
   };
 
+  // Status styles for accommodation
+  const getStatusStyle = (status) => {
+    switch (String(status || "").toLowerCase()) {
+      case "vacant":
+        return "bg-[#D2138C] hover:bg-[#D2138C] text-white";
+      case "occupied":
+        return "bg-gray-200 hover:bg-gray-200 text-gray-700";
+      case "coming soon":
+        return "bg-amber-100 hover:bg-amber-100 text-amber-800 border border-amber-200";
+      case "pending":
+        return "bg-blue-100 hover:bg-blue-100 text-blue-800 border border-blue-200";
+      default:
+        return "bg-gray-100 hover:bg-gray-100 text-gray-600";
+    }
+  };
+
   return (
     <div>
       <NavBar />
@@ -152,17 +168,21 @@ function PropertyDetails() {
                   </div>
                 )}
 
-                {/* Availability Badge */}
-                {property.available ? (
-                  <div className="absolute top-4 left-4 bg-[#D2138C] text-white px-4 py-2 rounded-full">
-                    Available Now
-                  </div>
-                ) : (
-                  <div className="absolute top-4 left-4 bg-gray-200 text-gray-700 px-4 py-2 rounded-full">
-                    Unavailable
-                  </div>
-                )}
+                {/* Status badge */}
+                <div
+                  className={`absolute top-3 right-3 font-medium text-white px-4 py-2 rounded-full ${getStatusStyle(
+                    property.status || (property.available ? "vacant" : "occupied")
+                  )}`}
+                >
+                  {property.status
+                    ? property.status.charAt(0).toUpperCase() + property.status.slice(1)
+                    : property.available
+                    ? "Vacant"
+                    : "Occupied"}
+                </div>
               </div>
+
+              
 
               {/* Thumbnail Strip */}
               {hasImages && images.length > 1 && (

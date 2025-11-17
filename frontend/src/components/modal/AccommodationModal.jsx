@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import {
   Dialog,
   DialogContent,
@@ -21,7 +21,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
-import { X, Upload, Image as ImageIcon } from "lucide-react";
+import { X, Image as ImageIcon } from "lucide-react";
 
 const PREDEFINED_FEATURES = [
   "Wheelchair Access",
@@ -56,6 +56,29 @@ const PREDEFINED_AMENITIES = [
   "Heating",
 ];
 
+function normalizeImageIds(arr) {
+  // Accepts either [id, id...] or [{id, url}, ...] and returns [id, ...]
+  if (!Array.isArray(arr)) return [];
+  return arr.map((it) => {
+    if (it && typeof it === "object") {
+      // try common shapes
+      if ("id" in it) return it.id;
+      if ("image_id" in it) return it.image_id;
+      // fallback: leave as-is (could be string path), but keep it
+      return it;
+    }
+    return it;
+  });
+}
+
+function arraysEqual(a = [], b = []) {
+  if (a.length !== b.length) return false;
+  for (let i = 0; i < a.length; i++) {
+    if (a[i] !== b[i]) return false;
+  }
+  return true;
+}
+
 function AccommodationModal({ open, onClose, accommodation, onSuccess }) {
   const isEdit = Boolean(accommodation);
 
@@ -63,7 +86,7 @@ function AccommodationModal({ open, onClose, accommodation, onSuccess }) {
   const [errorMsg, setErrorMsg] = useState("");
   const [uploadingImages, setUploadingImages] = useState(false);
 
-  const [formData, setFormData] = useState({
+  const emptyForm = {
     title: "",
     location: "",
     capacity: "",
@@ -75,46 +98,61 @@ function AccommodationModal({ open, onClose, accommodation, onSuccess }) {
     supportLevel: "",
     features: [],
     amenities: [],
-    images: [],
-    status: "Vacant", // "Vacant" | "Occupied"
-  });
+    images: [], // array of IDs (or strings depending on your backend)
+    status: "Vacant",
+  };
 
-  // preload data
+  const [formData, setFormData] = useState(emptyForm);
+
+  // store initial images for compare (useRef so changes don't rerender)
+  const initialImagesRef = useRef([]);
+
+  // Reset / preload when modal opens
   useEffect(() => {
+    if (!open) {
+      setErrorMsg("");
+      setLoading(false);
+      setUploadingImages(false);
+      return;
+    }
+
     if (accommodation) {
+      const normalizedImages = normalizeImageIds(accommodation.images);
+      initialImagesRef.current = normalizedImages.slice(); // save snapshot
+
       setFormData({
         title: accommodation.title || "",
         location: accommodation.location || "",
-        capacity: accommodation.capacity ?? "",
+        capacity:
+          accommodation.capacity !== undefined && accommodation.capacity !== null
+            ? String(accommodation.capacity)
+            : "",
         description: accommodation.description || "",
         accommodationType: accommodation.accommodationType || "",
         gender: accommodation.gender || "",
-        bedrooms: accommodation.bedrooms ?? "",
-        bathrooms: accommodation.bathrooms ?? "",
+        bedrooms:
+          accommodation.bedrooms !== undefined && accommodation.bedrooms !== null
+            ? String(accommodation.bedrooms)
+            : "",
+        bathrooms:
+          accommodation.bathrooms !== undefined && accommodation.bathrooms !== null
+            ? String(accommodation.bathrooms)
+            : "",
         supportLevel: accommodation.supportLevel || "",
-        features: accommodation.features || [],
-        amenities: accommodation.amenities || [],
-        images: accommodation.images || [],
+        features: Array.isArray(accommodation.features)
+          ? accommodation.features
+          : [],
+        amenities: Array.isArray(accommodation.amenities)
+          ? accommodation.amenities
+          : [],
+        images: normalizedImages,
         status: accommodation.status || "Vacant",
       });
     } else {
-      setFormData({
-        title: "",
-        location: "",
-        capacity: "",
-        description: "",
-        accommodationType: "",
-        gender: "",
-        bedrooms: "",
-        bathrooms: "",
-        supportLevel: "",
-        features: [],
-        amenities: [],
-        images: [],
-        status: "Vacant",
-      });
+      initialImagesRef.current = [];
+      setFormData(emptyForm);
     }
-  }, [accommodation]);
+  }, [accommodation, open]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -134,13 +172,38 @@ function AccommodationModal({ open, onClose, accommodation, onSuccess }) {
 
     const method = isEdit ? "PUT" : "POST";
 
-    // make sure numeric fields are numbers
-    const payload = {
-      ...formData,
-      capacity: Number(formData.capacity),
-      bedrooms: Number(formData.bedrooms) || 0,
-      bathrooms: Number(formData.bathrooms) || 0,
+    // Normalize images to IDs (in case some items are objects)
+    const normalizedCurrentImages = normalizeImageIds(formData.images);
+
+    // Build payload but DO NOT include images for edit if unchanged
+    const basePayload = {
+      title: formData.title,
+      location: formData.location,
+      capacity: formData.capacity === "" ? 0 : Number(formData.capacity),
+      description: formData.description,
+      accommodationType: formData.accommodationType,
+      gender: formData.gender,
+      bedrooms: formData.bedrooms === "" ? 0 : Number(formData.bedrooms),
+      bathrooms: formData.bathrooms === "" ? 0 : Number(formData.bathrooms),
+      supportLevel: formData.supportLevel,
+      features: Array.isArray(formData.features) ? formData.features : [],
+      amenities: Array.isArray(formData.amenities) ? formData.amenities : [],
+      status: formData.status,
     };
+
+    // Decide whether to include images:
+    // - If creating new (not edit): always include images (may be empty)
+    // - If editing: include images only if they differ from initialImagesRef.current
+    const payload = { ...basePayload };
+    if (!isEdit) {
+      payload.images = normalizedCurrentImages;
+    } else {
+      const same = arraysEqual(initialImagesRef.current, normalizedCurrentImages);
+      if (!same) {
+        payload.images = normalizedCurrentImages;
+      }
+      // if same, we intentionally DO NOT add images key to payload
+    }
 
     try {
       const response = await fetch(url, {
@@ -156,17 +219,10 @@ function AccommodationModal({ open, onClose, accommodation, onSuccess }) {
 
       if (!response.ok) {
         throw new Error(
-          data.message ||
-            (isEdit
-              ? "Failed to update accommodation"
-              : "Failed to add accommodation")
+          data.message || (isEdit ? "Failed to update accommodation" : "Failed to add accommodation")
         );
       }
 
-      console.log(
-        isEdit ? "Accommodation updated:" : "Accommodation added:",
-        data
-      );
       if (onSuccess) onSuccess();
       onClose();
     } catch (error) {
@@ -215,24 +271,19 @@ function AccommodationModal({ open, onClose, accommodation, onSuccess }) {
         const formDataFile = new FormData();
         formDataFile.append("file", file);
 
-        const res = await fetch(
-          "http://localhost:5000/api/sdaowner/upload_image",
-          {
-            method: "POST",
-            headers: {
-              Authorization: `Bearer ${token}`,
-              // IMPORTANT: do NOT set Content-Type manually for FormData
-            },
-            body: formDataFile,
-          }
-        );
+        const res = await fetch("http://localhost:5000/api/sdaowner/upload_image", {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+          body: formDataFile,
+        });
 
         const data = await res.json();
         if (!res.ok) {
           throw new Error(data.message || "Failed to upload image");
         }
 
-        // store the ID (or path, depending on your decision)
         uploadedIds.push(data.id);
       }
 
@@ -245,6 +296,8 @@ function AccommodationModal({ open, onClose, accommodation, onSuccess }) {
       setErrorMsg(err.message);
     } finally {
       setUploadingImages(false);
+      // file input cannot be programmatically cleared in a cross-browser safe way without a ref;
+      // UI will still show previously uploaded images from the images array.
     }
   };
 
@@ -262,13 +315,9 @@ function AccommodationModal({ open, onClose, accommodation, onSuccess }) {
       <DialogContent className="sm:max-w-[700px] max-h-[90vh]">
         <form onSubmit={handleSubmit}>
           <DialogHeader>
-            <DialogTitle>
-              {isEdit ? "Edit Accommodation" : "Add New Accommodation"}
-            </DialogTitle>
+            <DialogTitle>{isEdit ? "Edit Accommodation" : "Add New Accommodation"}</DialogTitle>
             <DialogDescription>
-              {isEdit
-                ? "Update the accommodation details below."
-                : "Fill out the details to add a new accommodation."}
+              {isEdit ? "Update the accommodation details below." : "Fill out the details to add a new accommodation."}
             </DialogDescription>
           </DialogHeader>
 
@@ -280,9 +329,7 @@ function AccommodationModal({ open, onClose, accommodation, onSuccess }) {
                   <Label>Title</Label>
                   <Input
                     value={formData.title}
-                    onChange={(e) =>
-                      setFormData({ ...formData, title: e.target.value })
-                    }
+                    onChange={(e) => setFormData({ ...formData, title: e.target.value })}
                     placeholder="e.g. Modern Green Point Apartment"
                     required
                   />
@@ -291,9 +338,7 @@ function AccommodationModal({ open, onClose, accommodation, onSuccess }) {
                   <Label>Location</Label>
                   <Input
                     value={formData.location}
-                    onChange={(e) =>
-                      setFormData({ ...formData, location: e.target.value })
-                    }
+                    onChange={(e) => setFormData({ ...formData, location: e.target.value })}
                     placeholder="e.g. Green Point, Cape Town"
                     required
                   />
@@ -303,9 +348,7 @@ function AccommodationModal({ open, onClose, accommodation, onSuccess }) {
                   <Input
                     type="number"
                     value={formData.capacity}
-                    onChange={(e) =>
-                      setFormData({ ...formData, capacity: e.target.value })
-                    }
+                    onChange={(e) => setFormData({ ...formData, capacity: e.target.value })}
                     min="1"
                     required
                   />
@@ -314,9 +357,7 @@ function AccommodationModal({ open, onClose, accommodation, onSuccess }) {
                   <Label>Description</Label>
                   <Textarea
                     value={formData.description}
-                    onChange={(e) =>
-                      setFormData({ ...formData, description: e.target.value })
-                    }
+                    onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                     placeholder="Describe the accommodation..."
                     required
                   />
@@ -328,10 +369,8 @@ function AccommodationModal({ open, onClose, accommodation, onSuccess }) {
                 <div>
                   <Label>Type</Label>
                   <Select
-                    value={formData.accommodationType}
-                    onValueChange={(value) =>
-                      setFormData({ ...formData, accommodationType: value })
-                    }
+                    value={formData.accommodationType || ""}
+                    onValueChange={(value) => setFormData({ ...formData, accommodationType: value })}
                   >
                     <SelectTrigger>
                       <SelectValue placeholder="Select type" />
@@ -347,10 +386,8 @@ function AccommodationModal({ open, onClose, accommodation, onSuccess }) {
                 <div>
                   <Label>Gender</Label>
                   <Select
-                    value={formData.gender}
-                    onValueChange={(value) =>
-                      setFormData({ ...formData, gender: value })
-                    }
+                    value={formData.gender || ""}
+                    onValueChange={(value) => setFormData({ ...formData, gender: value })}
                   >
                     <SelectTrigger>
                       <SelectValue placeholder="Select gender" />
@@ -367,12 +404,12 @@ function AccommodationModal({ open, onClose, accommodation, onSuccess }) {
                   <Input
                     id="bedrooms"
                     type="number"
-                    min="1"
+                    min="0"
                     value={formData.bedrooms}
                     onChange={(e) =>
                       setFormData({
                         ...formData,
-                        bedrooms: parseInt(e.target.value) || 1,
+                        bedrooms: e.target.value === "" ? "" : String(parseInt(e.target.value, 10) || 0),
                       })
                     }
                     required
@@ -383,36 +420,16 @@ function AccommodationModal({ open, onClose, accommodation, onSuccess }) {
                   <Input
                     id="bathrooms"
                     type="number"
-                    min="1"
+                    min="0"
                     value={formData.bathrooms}
                     onChange={(e) =>
                       setFormData({
                         ...formData,
-                        bathrooms: parseInt(e.target.value) || 1,
+                        bathrooms: e.target.value === "" ? "" : String(parseInt(e.target.value, 10) || 0),
                       })
                     }
                     required
                   />
-                </div>
-                <div>
-                  <Label>Support Level</Label>
-                  <Select
-                    value={formData.supportLevel}
-                    onValueChange={(value) =>
-                      setFormData({ ...formData, supportLevel: value })
-                    }
-                  >
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select support level" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="Low support">Low support</SelectItem>
-                      <SelectItem value="Moderate support">
-                        Moderate support
-                      </SelectItem>
-                      <SelectItem value="High support">High support</SelectItem>
-                    </SelectContent>
-                  </Select>
                 </div>
               </div>
 
@@ -430,10 +447,7 @@ function AccommodationModal({ open, onClose, accommodation, onSuccess }) {
                         checked={formData.features.includes(feature)}
                         onCheckedChange={() => toggleFeature(feature)}
                       />
-                      <label
-                        htmlFor={`feature-${feature}`}
-                        className="text-sm text-gray-700 cursor-pointer flex-1"
-                      >
+                      <label htmlFor={`feature-${feature}`} className="text-sm text-gray-700 cursor-pointer flex-1">
                         {feature}
                       </label>
                     </div>
@@ -455,10 +469,7 @@ function AccommodationModal({ open, onClose, accommodation, onSuccess }) {
                         checked={formData.amenities.includes(amenity)}
                         onCheckedChange={() => toggleAmenity(amenity)}
                       />
-                      <label
-                        htmlFor={`amenity-${amenity}`}
-                        className="text-sm text-gray-700 cursor-pointer flex-1"
-                      >
+                      <label htmlFor={`amenity-${amenity}`} className="text-sm text-gray-700 cursor-pointer flex-1">
                         {amenity}
                       </label>
                     </div>
@@ -470,38 +481,21 @@ function AccommodationModal({ open, onClose, accommodation, onSuccess }) {
               <div>
                 <Label>Images</Label>
                 <div className="flex gap-2 mt-2 items-center">
-                  <Input
-                    type="file"
-                    multiple
-                    accept="image/*"
-                    onChange={handleImageFilesChange}
-                  />
-                  {uploadingImages && (
-                    <span className="text-xs text-gray-500">Uploading...</span>
-                  )}
+                  <Input type="file" multiple accept="image/*" onChange={handleImageFilesChange} />
+                  {uploadingImages && <span className="text-xs text-gray-500">Uploading...</span>}
                 </div>
 
-                {formData.images.length > 0 ? (
+                {formData.images && formData.images.length > 0 ? (
                   <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 mt-4">
                     {formData.images.map((imgId, i) => (
-                      <div
-                        key={i}
-                        className="relative border rounded p-2 bg-gray-50"
-                      >
+                      <div key={i} className="relative border rounded p-2 bg-gray-50">
                         <div className="flex items-center gap-2">
                           <ImageIcon className="h-4 w-4 text-gray-400" />
-                          <span className="text-sm truncate">
-                            Image ID: {imgId}
-                          </span>
+                          <span className="text-sm truncate">Image ID: {imgId}</span>
                         </div>
                         <button
                           type="button"
-                          onClick={() =>
-                            setFormData((prev) => ({
-                              ...prev,
-                              images: prev.images.filter((id) => id !== imgId),
-                            }))
-                          }
+                          onClick={() => removeImage(imgId)}
                           className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1"
                         >
                           <X className="h-3 w-3" />
@@ -521,28 +515,17 @@ function AccommodationModal({ open, onClose, accommodation, onSuccess }) {
                 <Label>Availability Status</Label>
                 <div className="flex items-center justify-between mt-3 border border-gray-200 rounded-md p-3">
                   <div className="flex items-center gap-2">
-                    <div
-                      className={`w-3 h-3 rounded-full ${
-                        isVacant ? "bg-green-500" : "bg-red-500"
-                      }`}
-                    ></div>
+                    <div className={`w-3 h-3 rounded-full ${isVacant ? "bg-green-500" : "bg-red-500"}`}></div>
                     <p>{isVacant ? "Vacant" : "Occupied"}</p>
                   </div>
                   <Switch
                     checked={isVacant}
-                    onCheckedChange={(checked) =>
-                      setFormData((prev) => ({
-                        ...prev,
-                        status: checked ? "Vacant" : "Occupied",
-                      }))
-                    }
+                    onCheckedChange={(checked) => setFormData((prev) => ({ ...prev, status: checked ? "Vacant" : "Occupied" }))}
                   />
                 </div>
               </div>
 
-              {errorMsg && (
-                <p className="text-sm text-red-500 mt-2">{errorMsg}</p>
-              )}
+              {errorMsg && <p className="text-sm text-red-500 mt-2">{errorMsg}</p>}
             </div>
           </ScrollArea>
 
@@ -550,18 +533,8 @@ function AccommodationModal({ open, onClose, accommodation, onSuccess }) {
             <Button type="button" variant="outline" onClick={onClose}>
               Cancel
             </Button>
-            <Button
-              type="submit"
-              className="bg-[#D2138C] hover:bg-[#B01076] text-white"
-              disabled={loading}
-            >
-              {loading
-                ? isEdit
-                  ? "Updating..."
-                  : "Adding..."
-                : isEdit
-                ? "Update"
-                : "Add"}
+            <Button type="submit" className="bg-[#D2138C] hover:bg-[#B01076] text-white" disabled={loading}>
+              {loading ? (isEdit ? "Updating..." : "Adding...") : isEdit ? "Update" : "Add"}
             </Button>
           </DialogFooter>
         </form>

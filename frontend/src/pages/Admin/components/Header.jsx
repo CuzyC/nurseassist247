@@ -49,9 +49,6 @@ function Header({ pageTitle }) {
 
                 <div className="flex items-center gap-3">
                     <button className="p-2 rounded-full bg-[#D2138C] hover:bg-[#D2138C] transition cursor-pointer">
-                        <Bell className="h-5 w-5 text-white" />
-                    </button>
-                    <button className="p-2 rounded-full bg-[#D2138C] hover:bg-[#D2138C] transition cursor-pointer">
                         <Settings className="h-5 w-5 text-white" />
                     </button>
                 </div>

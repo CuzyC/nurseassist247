@@ -13,13 +13,14 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import Logo from "@/assets/logo.png";
+import NavBar from "../Client/components/Navigationbar";
 
 function SdaRegister() {
   const navigate = useNavigate();
 
   // Form Fields
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
+  const [fullName, setFullName] = useState("");
+  const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -32,7 +33,7 @@ function SdaRegister() {
     setError("");
 
     
-    if (!firstName || !lastName || !email || !password || !confirmPassword) {
+    if (!fullName || !username || !email || !password || !confirmPassword) {
       setError("Please fill in all fields.");
       return;
     }
@@ -45,15 +46,9 @@ function SdaRegister() {
     try {
       setLoading(true);
 
-      // ✅ comma -> .trim()
-      const fullName = `${firstName} ${lastName}`.trim();
-      const baseUsername = (
-        email.split("@")[0] || `${firstName}${lastName}`
-      ).replace(/\s+/g, "");
-
       const payload = {
         name: fullName,
-        username: baseUsername,
+        username: username,
         email,
         password,
         role: "SDA Owner",
@@ -94,53 +89,41 @@ function SdaRegister() {
 
   return (
     <div className="min-h-screen bg-white flex flex-col">
-      {/* Top logo bar */}
-      <header className="w-full border-b border-gray-100">
-        <div className="max-w-5xl mx-auto px-6 py-5 flex items-center justify-between">
-          <img src={Logo} alt="Nurse Assist 24/7" className="h-12 w-auto" />
-          <button
-            type="button"
-            className="h-9 w-9 rounded-full border border-gray-300 flex items-center justify-center text-gray-500 text-sm"
-            aria-label="Help"
-          >
-            *
-          </button>
-        </div>
-      </header>
+      <NavBar logo={Logo} />
 
       {/* Main content */}
-      <main className="flex-1">
-        <div className="max-w-5xl mx-auto px-6 py-10 flex justify-center">
+      <main>
+        <div className="max-w-5xl mx-auto flex justify-center">
           <Card className="w-full max-w-xl shadow-none border-0">
-            <CardHeader className="pb-4">
+            <CardHeader className="pb-4 text-center">
               <CardTitle className="text-2xl font-semibold">
                 Create your partner account
               </CardTitle>
               <CardDescription className="mt-2 text-gray-700">
-                Enter your details to continue
+                Enter your details to proceed with the registration.
               </CardDescription>
             </CardHeader>
 
             <CardContent>
               <form onSubmit={handleSubmit} className="space-y-4">
                 <div className="space-y-2">
-                  <Label htmlFor="firstName">First name</Label>
+                  <Label htmlFor="firstName">Name</Label>
                   <Input
                     id="firstName"
-                    placeholder="Enter your first name"
-                    value={firstName}
-                    onChange={(e) => setFirstName(e.target.value)}
+                    placeholder="e.g. John Doe"
+                    value={fullName}
+                    onChange={(e) => setFullName(e.target.value)}
                     required
                   />
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="lastName">Last name</Label>
+                  <Label htmlFor="lastName">Username</Label>
                   <Input
                     id="lastName"
-                    placeholder="Enter your last name"
-                    value={lastName}
-                    onChange={(e) => setLastName(e.target.value)}
+                    placeholder="e.g. john_doe123"
+                    value={username}
+                    onChange={(e) => setUsername(e.target.value)}
                     required
                   />
                 </div>

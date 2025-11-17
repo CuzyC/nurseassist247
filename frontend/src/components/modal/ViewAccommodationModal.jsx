@@ -7,6 +7,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import { Badge } from "@/components/ui/badge";
 
 function ViewAccommodationModal({ open, onOpenChange, accommodation }) {
@@ -20,68 +21,107 @@ function ViewAccommodationModal({ open, onOpenChange, accommodation }) {
           </DialogDescription>
         </DialogHeader>
 
-        <div className="grid gap-4 py-4">
-          {/* ID */}
-          <div className="grid grid-cols-3 items-center gap-4">
-            <span className="text-gray-500">ID:</span>
-            <span className="col-span-2 text-gray-900">
-              #{accommodation.id}
-            </span>
-          </div>
+        <ScrollArea className="h-[60vh] pr-4 mt-2">
+          <div className="grid gap-4 py-4">
+            {/* ID */}
+            <div className="grid grid-cols-3 items-center gap-4">
+              <span className="text-gray-500">ID:</span>
+              <span className="col-span-2 text-gray-900">
+                #{accommodation.id}
+              </span>
+            </div>
 
-          {/* Accommodation Type */}
-          <div className="grid grid-cols-3 items-center gap-4">
-            <span className="text-gray-500">Type:</span>
-            <span className="col-span-2 text-gray-900">
-              {accommodation.type}
-            </span>
-          </div>
+            {/* Title */}
+            <div className="grid grid-cols-3 items-center gap-4">
+              <span className="text-gray-500">Title:</span>
+              <span className="col-span-2 text-gray-900">
+                {accommodation.title}
+              </span>
+            </div>
 
-          {/* Room Configuration */}
-          <div className="grid grid-cols-3 items-center gap-4">
-            <span className="text-gray-500">Configuration:</span>
-            <span className="col-span-2 text-gray-900">
-              {accommodation.roomConfiguration}
-            </span>
-          </div>
+            {/* Location */}
+            <div className="grid grid-cols-3 items-center gap-4">
+              <span className="text-gray-500">Location:</span>
+              <span className="col-span-2 text-gray-900">
+                {accommodation.location}
+              </span>
+            </div>
 
-          {/* Suburb */}
-          <div className="grid grid-cols-3 items-center gap-4">
-            <span className="text-gray-500">Suburb:</span>
-            <span className="col-span-2 text-gray-900">
-              {accommodation.suburb}
-            </span>
-          </div>
+            {/* Capacity */}
+            <div className="grid grid-cols-3 items-center gap-4">
+              <span className="text-gray-500">Capacity:</span>
+              <span className="col-span-2 text-gray-900">
+                {accommodation.capacity}
+              </span>
+            </div>
 
-          {/* Address */}
-          <div className="grid grid-cols-3 items-center gap-4">
-            <span className="text-gray-500">Address:</span>
-            <span className="col-span-2 text-gray-900">
-              {accommodation.address}
-            </span>
-          </div>
+            {/* Description */}
+            <div className="grid grid-cols-3 items-center gap-4">
+              <span className="text-gray-500">Description:</span>
+              <span className="col-span-2 text-gray-900">
+                {accommodation.description}
+              </span>
+            </div>
 
-          {/* Status */}
-          <div className="grid grid-cols-3 items-center gap-4">
-            <span className="text-gray-500">Status:</span>
-            <div className="col-span-2">
-              <Badge
-                variant={
-                  accommodation.availabilityStatus === "Vacant"
-                    ? "default"
-                    : "secondary"
-                }
-                className={
-                  accommodation.availabilityStatus === "Vacant"
-                    ? "bg-green-100 text-green-700 hover:bg-green-200"
-                    : "bg-red-100 text-red-700 hover:bg-red-200"
-                }
-              >
-                {accommodation.availabilityStatus}
-              </Badge>
+            {/* Accommodation Type */}
+            <div className="grid grid-cols-3 items-center gap-4">
+              <span className="text-gray-500">Type:</span>
+              <span className="col-span-2 text-gray-900">
+                {accommodation.accommodationType}
+              </span>
+            </div>
+
+            {/* Gender */}
+            <div className="grid grid-cols-3 items-center gap-4">
+              <span className="text-gray-500">Gender:</span>
+              <span className="col-span-2 text-gray-900">
+                {accommodation.gender}
+              </span>
+            </div>
+
+            {/* Room Configuration */}
+            <div className="grid grid-cols-3 items-center gap-4">
+              <span className="text-gray-500">Room Configuration:</span>
+              <span className="col-span-2 text-gray-900">
+                {accommodation.bedrooms} Bedrooms, {accommodation.bathrooms} Bathrooms
+              </span>
+            </div>
+
+            {/* Features */}
+            <div className="grid grid-cols-3 items-center gap-4">
+              <span className="text-gray-500">Features:</span>
+              <span className="col-span-2 text-gray-900">
+                {accommodation.features}
+              </span>
+            </div>
+
+            {/* Amenities */}
+            <div className="grid grid-cols-3 items-center gap-4">
+              <span className="text-gray-500">Amenities:</span>
+              <span className="col-span-2 text-gray-900">
+                {accommodation.amenities}
+              </span>
+            </div>
+
+
+            {/* Images */}
+            <div className="grid grid-cols-3 items-center gap-4">
+              <span className="text-gray-500">Images:</span>
+              <span className="col-span-2 text-gray-900">
+                {accommodation.images}
+              </span>
+            </div>
+            
+
+            {/* Status */}
+            <div className="grid grid-cols-3 items-center gap-4">
+              <span className="text-gray-500">Status:</span>
+              <span className="col-span-2 text-gray-900">
+                {accommodation.status}
+              </span>
             </div>
           </div>
-        </div>
+        </ScrollArea>
 
         <DialogFooter>
           <Button variant="outline" onClick={() => onOpenChange(false)}>
