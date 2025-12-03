@@ -28,6 +28,81 @@ import NavBar from "../components/NavigationBar";
 
 export default function Home() {
   const navigate = useNavigate();
+  const [searchTerm, setSearchTerm] = useState("");
+  const [allProperties, setAllProperties] = useState([]);
+  const [suggestions, setSuggestions] = useState([]);
+  const API_URL = import.meta.env.VITE_API_URL;
+
+  // Fetch properties once so we can show suggestions
+  useEffect(() => {
+    const fetchProps = async () => {
+      try {
+        const res = await fetch(`${API_URL}/api/public/accommodations`);
+        const data = await res.json();
+
+        const mapped = (data.accommodations || []).map((a) => ({
+          id: a.id,
+          title: a.title || "",
+          location: a.location || "",
+          propertyType:
+            a.propertyType || a.accommodationType || a.accommodation_type || "",
+
+          // 🔹 optional: keep owner contact on suggestions too
+          ownerPhone: a.ownerPhone || a.owner_phone || "",
+          ownerEmail: a.ownerEmail || a.owner_email || "",
+          
+        }));
+
+        setAllProperties(mapped);
+      } catch (err) {
+        console.error("Error fetching properties for suggestions:", err);
+      }
+    };
+
+    fetchProps();
+  }, []);
+
+  // When you click Search (or press Enter)
+  const handleSearch = (e) => {
+    e.preventDefault();
+    const q = searchTerm.trim();
+
+    if (!q) {
+      // Empty → just go to Properties page
+      navigate("/properties");
+    } else {
+      // With text → go to Properties with ?search=
+      navigate(`/properties?search=${encodeURIComponent(q)}`);
+    }
+  };
+
+  // Typing in the search box (for suggestions)
+  const handleChange = (e) => {
+    const value = e.target.value;
+    setSearchTerm(value);
+
+    const q = value.trim().toLowerCase();
+    if (!q) {
+      setSuggestions([]);
+      return;
+    }
+
+    const matches = allProperties
+      .filter((p) => {
+        const t = (p.title || "").toLowerCase();
+        const l = (p.location || "").toLowerCase();
+        const type = (p.propertyType || "").toLowerCase();
+        return t.includes(q) || l.includes(q) || type.includes(q);
+      })
+      .slice(0, 5); // top 5 suggestions
+
+    setSuggestions(matches);
+  };
+
+  // Clicking a suggestion → go to Properties with that title
+  const handleSuggestionClick = (prop) => {
+    navigate(`/properties?search=${encodeURIComponent(prop.title)}`);
+  };
 
   return (
     <div className="min-h-screen w-full">
@@ -51,18 +126,52 @@ export default function Home() {
                 comfortable homes across Australia with the support you deserve.
               </p>
 
-              {/* Search Bar */}
-              <div className="bg-white rounded-2xl p-2 shadow-md flex gap-2">
-                <div className="flex-1 flex items-center gap-2 px-3">
-                  <Search className="w-5 h-5 text-gray-400" />
-                  <Input
-                    placeholder="Search by location or property type..."
-                    className="border-0 focus-visible:ring-0 focus-visible:ring-offset-0"
-                  />
-                </div>
-                <Button className="bg-[#D2138C] hover:bg-[#950E64] text-white rounded-xl px-6">
-                  Search
-                </Button>
+              {/* Search Bar + Suggestions */}
+              <div className="space-y-2 relative max-w-xl">
+                <form
+                  onSubmit={handleSearch}
+                  className="bg-white rounded-2xl p-2 shadow-md flex gap-2"
+                >
+                  <div className="flex-1 flex items-center gap-2 px-3">
+                    <Search className="w-5 h-5 text-gray-400" />
+                    <Input
+                      placeholder="Search by location or property type..."
+                      className="border-0 focus-visible:ring-0 focus-visible:ring-offset-0"
+                      value={searchTerm}
+                      onChange={handleChange}
+                    />
+                  </div>
+                  <Button
+                    type="submit"
+                    className="bg-[#D2138C] hover:bg-[#950E64] text-white rounded-xl px-6"
+                  >
+                    Search
+                  </Button>
+                </form>
+
+                {/* Suggestions dropdown */}
+                {suggestions.length > 0 && (
+                  <div className="absolute left-0 right-0 mt-2 bg-white rounded-2xl shadow-lg overflow-hidden max-w-[640px] z-20">
+                    {suggestions.map((s) => (
+                      <button
+                        key={s.id}
+                        type="button"
+                        onClick={() => handleSuggestionClick(s)}
+                        className="w-full flex items-start gap-3 px-4 py-3 text-left hover:bg-pink-50 transition-colors border-none outline-none focus-visible:ring-0"
+                      >
+                        <Search className="w-4 h-4 mt-1 text-gray-400 shrink-0" />
+
+                        <div className="text-sm font-medium text-gray-900">
+                          {s.title}
+                        </div>
+                        <div className="text-sm text-gray-600 mt-0.5">
+                          {s.location}
+                          {s.propertyType ? ` • ${s.propertyType}` : ""}
+                        </div>
+                      </button>
+                    ))}
+                  </div>
+                )}
               </div>
             </div>
 
