@@ -7,7 +7,7 @@ import { Filter, Search, LayoutGrid, LayoutList } from "lucide-react";
 
 import PropertyCard from "../components/PropertyCard";
 import NavBar from "../components/NavigationBar";
-import FilterPanel from "../components/FilterPanel";
+import FilterPanel from "../components/Filterpanel";
 
 import Footer from "../components/Footer";
 
