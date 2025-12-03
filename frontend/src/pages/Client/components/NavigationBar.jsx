@@ -14,19 +14,49 @@ function NavBar(){
                         </a>
                     </div>
 
-                    {/* Navigation */}
+                    {/* Navigation Links*/}
                     <div className="hidden md:flex items-center gap-4">
-                        <a href="/properties" className="text-foreground hover:text-[#D2138C] transition-colors">Properties</a>
-                        <a href="https://nurseassist247.com.au/our-values/" className="text-foreground hover:text-[#D2138C] transition-colors">About Us</a>
+                        <a
+                            href="/"
+                            className="text-foreground hover:text-[#D2138C] transition-colors"
+                        >
+                            Home
+                        </a>
+                        <a
+                            href="/properties"
+                            className="text-foreground hover:text-[#D2138C] transition-colors"
+                        >
+                            Properties
+                        </a>
+                        <a
+                            href="https://nurseassist247.com.au/our-values/"
+                            className="text-foreground hover:text-[#D2138C] transition-colors"
+                        >
+                            About Us
+                        </a>
                     </div>
 
-                    {/* Contact Us */}
-                    <Button
-                        variant="default"
-                        className="bg-[#D2138C] hover:bg-pink-700 rounded-full text-white"
-                    >
-                        Contact Us
-                    </Button>
+                    <div className="space-x-2">
+                        {/* Contact Us */}
+                        <Link to="https://nurseassist247.com.au/contact-us/">
+                            <Button
+                                variant="default"
+                                className="bg-[#D2138C] hover:bg-pink-700 rounded-full text-white"
+                            >
+                                Contact Us
+                            </Button>
+                        </Link>
+                        
+
+                        {/* Sign In */}
+                        <Button
+                            variant="outline"
+                            onClick={() => navigate("/login")}
+                            className="text-sm rounded-full border border-gray-200 hover:bg-gray-50"
+                        >
+                            Sign in
+                        </Button>
+                    </div>
                 </div>
             </div>
         </nav>
