@@ -31,7 +31,7 @@ export default function Home() {
   const [searchTerm, setSearchTerm] = useState("");
   const [allProperties, setAllProperties] = useState([]);
   const [suggestions, setSuggestions] = useState([]);
-  const API_URL = import.meta.env.VITE_API_URL;
+  const API_URL = import.meta.env.VITE_API_BASE_URL;
 
   // Fetch properties once so we can show suggestions
   useEffect(() => {
@@ -44,13 +44,7 @@ export default function Home() {
           id: a.id,
           title: a.title || "",
           location: a.location || "",
-          propertyType:
-            a.propertyType || a.accommodationType || a.accommodation_type || "",
-
-          // 🔹 optional: keep owner contact on suggestions too
-          ownerPhone: a.ownerPhone || a.owner_phone || "",
-          ownerEmail: a.ownerEmail || a.owner_email || "",
-          
+          propertyType: a.propertyType || a.accommodationType || a.accommodation_type || ""
         }));
 
         setAllProperties(mapped);
