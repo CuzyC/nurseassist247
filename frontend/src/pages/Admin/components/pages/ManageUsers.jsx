@@ -25,6 +25,7 @@ function ManageUsers() {
   const [selectedAdmin, setSelectedAdmin] = useState(null);
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
   const [selectedId, setSelectedId] = useState(null);
+  const API_URL = import.meta.env.VITE_API_BASE_URL;
 
   // Filter accommodation with search bar
   const filteredAdmins = admin.filter((acc) => {
