@@ -222,9 +222,16 @@ function Properties() {
   };
 
   // 👇 PAGINATION DERIVED VALUES
-  const totalPages = Math.ceil(filteredProperties.length / PAGE_SIZE) || 1;
+  const viewFilteredProperties =
+    viewMode === "grid"
+      ? filteredProperties.filter(
+          (p) => (p.status || "").toLowerCase() !== "occupied"
+        )
+      : filteredProperties;
+
+  const totalPages = Math.ceil(viewFilteredProperties.length / PAGE_SIZE) || 1;
   const startIndex = (currentPage - 1) * PAGE_SIZE;
-  const paginatedProperties = filteredProperties.slice(
+  const paginatedProperties = viewFilteredProperties.slice(
     startIndex,
     startIndex + PAGE_SIZE
   );
