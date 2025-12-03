@@ -12,8 +12,6 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
-import Logo from "@/assets/logo.png";
-import NavBar from "../Client/components/Navigationbar";
 
 function SdaRegister() {
   const navigate = useNavigate();
@@ -91,7 +89,6 @@ function SdaRegister() {
 
   return (
     <div className="min-h-screen bg-white flex flex-col">
-      <NavBar logo={Logo} />
 
       {/* Main content */}
       <main>
