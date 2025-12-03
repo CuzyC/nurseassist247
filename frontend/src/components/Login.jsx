@@ -25,7 +25,7 @@ export default function Login({
   redirectMap = {
     Admin: "/admin",
     Owner: "/admin",
-    "SDA Owner": "/admin",
+    "SDA Owner": "/sda-owner",
     Client: "/",
   },
   onSuccess = null,

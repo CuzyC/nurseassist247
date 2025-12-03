@@ -28,6 +28,7 @@ import NotFound from "@/pages/NotFound";
 export function AppRouter() {
   return (
     <Routes>
+        {/* Publlic (client) routes */}
         <Route path="/" element={<Home />} />
         <Route path="/properties" element={<Properties />} />
         <Route path="/properties/:id/:slug" element={<PropertyDetails />} />
@@ -37,9 +38,30 @@ export function AppRouter() {
             element={<CheckAccommodationForm />}
         />
 
-        {/* Login */}
+        {/* Login & Register*/}
         <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<SdaRegister />} />
         <Route path="/resetpassword" element={<ResetPassword />} />
+
+        {/* Admin routes */}
+        <Route
+            path="/admin"
+            element={
+                <ProtectedRoute allowedRoles={["Owner", "Admin"]}>
+                    <AdminDashboard />
+                </ProtectedRoute>
+            }
+        />
+
+        {/* SDA Owner routes */}
+        <Route
+            path="/sda-owner"
+            element={
+                <ProtectedRoute allowedRoles={["SDA Owner"]}>
+                    <SDAOwnerPortal />
+                </ProtectedRoute>
+            }
+        />
 
         <Route path="*" element={<NotFound />} />
     </Routes>
