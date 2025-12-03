@@ -1,6 +1,7 @@
 import { Home, Building2, Info, Menu, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import logo from "@/assets/logo.png"
+import { Link } from "react-router-dom"
 
 function NavBar(){
     return(
