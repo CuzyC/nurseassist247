@@ -35,9 +35,7 @@ function Properties() {
   useEffect(() => {
     const fetchProperties = async () => {
       try {
-        const res = await fetch(
-          `${API_URL}/api/public/accommodations`
-        );
+        const res = await fetch(`${API_URL}/api/public/accommodations`);
         const data = await res.json();
 
         const accommodations = data.accommodations || [];
@@ -88,7 +86,7 @@ function Properties() {
     };
 
     fetchProperties();
-  }, []);
+  }, [API_URL]);
 
   const handleFilterChange = (name, value) => {
     setFilters((prev) => ({ ...prev, [name]: value }));
@@ -163,9 +161,7 @@ function Properties() {
     <div className="bg-gray-50 min-h-screen">
       <NavBar />
       <div className="max-w-7xl mx-auto px-4 py-6 sm:px-6 lg:px-8">
-        <h1 className="text-2xl font-semibold mb-5">
-          SDA Properties
-        </h1>
+        <h1 className="text-2xl font-semibold mb-5">SDA Properties</h1>
 
         {/* Properties List */}
         <div className="lg:col-span-3">
@@ -213,23 +209,22 @@ function Properties() {
                 </button>
                 <Button
                   variant="outline"
-                  onClick={() => setOpenFilter(!openFilter)}
+                  onClick={() => setOpenFilter((v) => !v)}
                   className="rounded-full border-[#D2138C] text-[#D2138C] hover:bg-pink-50"
                 >
                   <Filter className="h-4 w-4 mr-2" /> Filters
                 </Button>
               </div>
 
-              {/* FilterPanel */}
-              {openFilter && (
-                <FilterPanel
-                  filters={filters}
-                  onChange={handleFilterChange}
-                  onApply={handleApplyFilters}
-                  onReset={handleResetFilters}
-                  onClose={() => setOpenFilter(false)}
-                />
-              )}
+              {/* Dialog-based FilterPanel — render always and pass open */}
+              <FilterPanel
+                open={openFilter}
+                filters={filters}
+                onChange={handleFilterChange}
+                onApply={handleApplyFilters}
+                onReset={handleResetFilters}
+                onClose={() => setOpenFilter(false)}
+              />
             </div>
           </div>
 
