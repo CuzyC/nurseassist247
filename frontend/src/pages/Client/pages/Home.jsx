@@ -43,6 +43,12 @@ export default function Home() {
             {/* Navigation */}
             <div className="hidden md:flex items-center gap-4">
               <a
+                href="/"
+                className="text-foreground hover:text-[#D2138C] transition-colors"
+              >
+                Home
+              </a>
+              <a
                 href="/properties"
                 className="text-foreground hover:text-[#D2138C] transition-colors"
               >
@@ -84,7 +90,7 @@ export default function Home() {
       {/* Hero section */}
       <section
         className="relative bg-gradient-to-b from-[#D2138C] to-[#FCE8F3] 
-            lg:bg-gradient-to-r lg:from-[#D2138C] lg:to-[#FCE8F3] py-20 overflow-hidden"
+            lg:bg-gradient-to-r lg:from-[#D2138C] lg:to-[#FCE8F3] py-20 overflow-hidden min-h-screen"
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
