@@ -11,7 +11,7 @@ import FilterPanel from "../components/Filterpanel";
 
 import Footer from "../components/Footer";
 
-const API_URL = import.meta.env.VITE_API_URL;
+const API_URL = import.meta.env.VITE_API_BASE_URL;
 
 const PAGE_SIZE = 12;
 
