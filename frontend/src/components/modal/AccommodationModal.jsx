@@ -273,7 +273,7 @@ function AccommodationModal({ open, onClose, accommodation, onSuccess }) {
         const formDataFile = new FormData();
         formDataFile.append("file", file);
 
-        const res = await fetch("http://localhost:5000/api/sdaowner/upload_image", {
+        const res = await fetch(`${API_URL}/api/sdaowner/upload_image`, {
           method: "POST",
           headers: {
             Authorization: `Bearer ${token}`,
