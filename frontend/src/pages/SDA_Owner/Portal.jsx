@@ -1,7 +1,7 @@
 import { useState } from "react";
 import SideBar from "./components/Sidebar";
 import Header from "./components/Header";
-import OwnerDashboard from "./components/pages/Dashboard";
+import OwnerDashboard from "./components/pages/DashBoard";
 import ManageAccommodations from "./components/pages/ManageAccommodations";
 import Availability from "./components/pages/Availability";
 import Booking from "./components/pages/Booking";
