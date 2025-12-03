@@ -271,28 +271,6 @@ function Properties() {
             {/* View Toggle + Filters */}
             <div className="flex justify-end">
               <div className="flex gap-2 p-1">
-                <button
-                  onClick={() => setViewMode("grid")}
-                  className={`p-2 rounded-lg transition-colors ${
-                    viewMode === "grid"
-                      ? "bg-[#D2138C] text-white"
-                      : "text-gray-600 hover:bg-gray-50"
-                  }`}
-                  aria-label="Grid view"
-                >
-                  <LayoutGrid className="w-5 h-5" />
-                </button>
-                <button
-                  onClick={() => setViewMode("list")}
-                  className={`p-2 rounded-lg transition-colors ${
-                    viewMode === "list"
-                      ? "bg-[#D2138C] text-white"
-                      : "text-gray-600 hover:bg-gray-50"
-                  }`}
-                  aria-label="List view"
-                >
-                  <LayoutList className="w-5 h-5" />
-                </button>
                 <Button
                   variant="outline"
                   onClick={() => {
