@@ -135,7 +135,6 @@ export default function Home() {
                     <Search className="w-5 h-5 text-gray-400" />
                     <Input
                       placeholder="Search by location or property type..."
-                      className="border-0 focus-visible:ring-0 focus-visible:ring-offset-0"
                       value={searchTerm}
                       onChange={handleChange}
                     />
