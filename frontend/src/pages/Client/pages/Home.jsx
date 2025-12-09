@@ -33,6 +33,9 @@ export default function Home() {
   const [searchTerm, setSearchTerm] = useState("");
   const [allProperties, setAllProperties] = useState([]);
   const [suggestions, setSuggestions] = useState([]);
+  const handlePropertySelect = (property) => {
+    navigate(`/properties/${property.id}`);
+  };
   const API_URL = import.meta.env.VITE_API_BASE_URL;
 
   // Fetch properties once so we can show suggestions
@@ -210,7 +213,7 @@ export default function Home() {
 
           {/* Featured Lists */}
           <div className="grid gap-6 md:gap-8 md:grid-cols-3">
-            {allProperties.map((property) => (
+            {allProperties.slice(0, 3).map((property) => (
               <PropertyCard
                 key={property.id}
                 property={property}
