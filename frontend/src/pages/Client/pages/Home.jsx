@@ -25,6 +25,8 @@ import {
 } from "@/components/ui/accordion";
 
 import NavBar from "../components/NavigationBar";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import PropertyCard from "../components/PropertyCard";
 
 export default function Home() {
   const navigate = useNavigate();
@@ -193,85 +195,189 @@ export default function Home() {
         </div>
       </section>
 
-      {/* How it works */}
-      <section className="w-full border-y border-gray-200 bg-white">
-        <div className="text-center mt-12">
-          <h2 className="text-gray-900 mb-4 text-3xl font-semibold">
-            How It Works
-          </h2>
-          <p className="text-gray-600 max-w-2xl mx-auto">
-            Finding your perfect SDA home is simple with our three-step process
-          </p>
-        </div>
-        <div className="max-w-6xl mx-auto px-6 py-12 grid md:grid-cols-3 gap-10">
-          <Feature
-            icon={<HomeIcon className="h-5 w-5" />}
-            title="Browse Properties"
-            text="Search our database of accessible homes tailored to your specific support needs."
-          />
-          <Feature
-            icon={<HomeIcon className="h-5 w-5" />}
-            title="Simple Property Dashboard"
-            text="Explore comprehensive information about accessibility features and amenities"
-          />
-          <Feature
-            icon={<Shield className="h-5 w-5" />}
-            title="Approve or Decline Requests"
-            text="Contact us to apply and we'll guide you through the process to your new home"
-          />
+      {/* Featured Properties*/}
+      <section className="w-full bg-color-pink/10 border-y border-gray-200">
+        <div className="max-w-6xl mx-auto px-4 md:px-6 py-16 md:py-20">
+          {/* Heading */}
+          <div className="text-center">
+            <h2 className="text-3xl md:text-4xl font-semibold text-gray-900 tracking-tight">
+              Featured Properties
+            </h2>
+            <p className="mt-4 text-gray-700 max-w-2xl mx-auto">
+              Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam accusantium sed cumque est eveniet adipisci sint? Totam optio tenetur libero praesentium a nisi, deserunt dolores dolorum, velit natus, nam aspernatur.
+            </p>
+          </div>
+
+          {/* Featured Lists */}
+          <div className="grid gap-6 md:gap-8 md:grid-cols-3">
+            {allProperties.map((property) => (
+              <PropertyCard
+                key={property.id}
+                property={property}
+                onClick={() => handlePropertySelect(property)}
+              />
+            ))}
+          </div>
+
+          {/* CTA button */}
+          <div className="flex mt-4 items-center justify-center">
+            <Button
+              onClick={() => navigate('/properties')}
+              className="w-full sm:w-auto rounded-full px-6 py-6 text-lg bg-[#D2138C] hover:bg-pink-700"
+            >
+              View more properties
+            </Button>
+          </div>
+
         </div>
       </section>
 
       {/* List your property */}
-      <section className="w-full">
-        <div className="max-w-5xl mx-auto py-8 md:py-8 grid md:grid-cols-2 items-center">
-          <div>
-            <h2 className="text-3xl md:text-4xl font-semibold text-pink-600">
-              Turn your accommodation into their next home
-            </h2>
+      <section className="w-full py-20 overflow-hidden">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid lg:grid-cols-2 gap-12 items-center">
+            {/* Text + CTA */}
+            <div className="space-y-6">
+              <h2 className="text-4xl md:text-5xl font-semibold text-[#D2138C]">
+                Turn your accommodation into their next home
+              </h2>
 
-            <p className="mt-3 text-md md:text-lg text-gray-700 max-w-prose">
-              List your SDA property so participants, 
-              coordinators and providers can discover it — quick verification, flexible bookings.
-            </p>
-
-            <div className="mt-4">
-              <Link to="/register">
-                <Button className="rounded-full px-5 py-6 text-sm bg-pink-600 hover:bg-pink-700">
-                  List your property
-                </Button>
-              </Link>
+              <p className="mt-3 text-md md:text-lg text-gray-700 max-w-prose">
+                List your SDA property so participants, 
+                coordinators and providers can discover it — quick verification, flexible bookings.
+              </p>
+              <div className="mt-4">
+                <Link to="/register">
+                  <Button className="rounded-full px-5 py-6 text-lg bg-[#D2138C] hover:bg-pink-700">
+                    List your property
+                  </Button>
+                </Link>
+              </div>
             </div>
-          </div>
+            
+            <div className="flex justify-center">
+              <img
+                src={picture}
+                alt="SDA illustration"
+                className="w-82 h-100 object-cover rounded-2xl transition-all duration-300"
+              />
+            </div>
 
-          <div className="flex justify-center md:justify-end">
-            <img
-              src={picture}
-              alt="SDA illustration"
-              className="w-72 md:w-88 max-w-full h-auto"
-            />
+            
           </div>
         </div>
       </section>
 
-      {/* FEATURES (3 columns) */}
-      <section className="w-full border-y border-gray-200 bg-white">
-        <div className="max-w-6xl mx-auto px-6 py-12 grid md:grid-cols-3 gap-10">
-          <Feature
-            icon={<UsersRound className="h-5 w-5" />}
-            title="Reach more Participants"
-            text="Your property appears in front of families, coordinators, and individuals searching for SDA homes."
-          />
-          <Feature
-            icon={<LayoutGrid className="h-5 w-5" />}
-            title="Simple Property Dashboard"
-            text="Update your listing, manage enquiries, and track bookings all in one place."
-          />
-          <Feature
-            icon={<CircleCheck className="h-5 w-5" />}
-            title="Approve or Decline Requests"
-            text="Review participant enquiries and choose who stays in your accommodation."
-          />
+      {/* How it works */}
+      <section className="w-full bg-color-pink/10 border-y border-gray-200">
+        <div className="max-w-6xl mx-auto px-4 md:px-6 py-16 md:py-20">
+          {/* Heading */}
+          <div className="text-center">
+            <h2 className="text-3xl md:text-4xl font-semibold text-gray-900 tracking-tight">
+              Your SDA Journey in 3 Simple Steps
+            </h2>
+            <p className="mt-4 text-gray-700 max-w-2xl mx-auto">
+              Finding your perfect SDA home or connecting with participants is simple – choose your path below.
+            </p>
+          </div>
+
+          {/* Tabs */}
+          <Tabs defaultValue="seeker" className="mt-10 w-full">
+            {/* Pill tabs */}
+            <div className="flex justify-center">
+              <TabsList
+                className="
+                  inline-flex items-center justify-center
+                  rounded-full bg-white
+                  shadow-[0_16px_40px_rgba(15,23,42,0.12)]
+                  p-2 h-16
+                "
+              >
+                <TabsTrigger
+                  value="seeker"
+                  className="
+                    px-10 py-3 text-base md:text-lg font-semibold rounded-full
+                    transition-all
+                    data-[state=active]:bg-[#D2138C]
+                    data-[state=active]:text-white
+                    data-[state=active]:shadow-[0_10px_25px_rgba(234,109,151,0.55)]
+                    data-[state=inactive]:text-gray-500
+                    data-[state=inactive]:bg-transparent
+                  "
+                >
+                  Seeker
+                </TabsTrigger>
+                <TabsTrigger
+                  value="lister"
+                  className="
+                    px-10 py-3 text-base md:text-lg font-semibold rounded-full
+                    transition-all
+                    data-[state=active]:bg-[#D2138C]
+                    data-[state=active]:text-white 
+                    data-[state=active]:shadow-[0_10px_25px_rgba(234,109,151,0.55)]
+                    data-[state=inactive]:text-gray-500
+                    data-[state=inactive]:bg-transparent
+                  "
+                >
+                  Lister
+                </TabsTrigger>
+              </TabsList>
+            </div>
+
+            {/* SEEKER STEPS */}
+            <TabsContent value="seeker" className="mt-12">
+              <div className="grid gap-6 md:gap-8 md:grid-cols-3">
+                <div className="bg-white rounded-3xl shadow-md p-6 md:p-8 flex flex-col gap-3 hover:-translate-y-1 hover:shadow-lg transition">
+                  <Feature
+                    icon={<HomeIcon className="h-6 w-6" />}
+                    title="Browse Properties"
+                    text="Search our database of accessible homes tailored to your specific support needs."
+                  />
+                </div>
+                <div className="bg-white rounded-3xl shadow-md p-6 md:p-8 flex flex-col gap-3 hover:-translate-y-1 hover:shadow-lg transition">
+                  <Feature
+                    icon={<LayoutGrid className="h-6 w-6" />}
+                    title="Simple Property Dashboard"
+                    text="Explore comprehensive information about accessibility features and amenities."
+                  />
+                </div>
+                <div className="bg-white rounded-3xl shadow-md p-6 md:p-8 flex flex-col gap-3 hover:-translate-y-1 hover:shadow-lg transition">
+                  <Feature
+                    icon={<Shield className="h-6 w-6" />}
+                    title="Apply with Confidence"
+                    text="Contact us to apply and we'll guide you through the process to your new home."
+                  />
+                </div>
+              </div>
+            </TabsContent>
+
+            {/* LISTER STEPS */}
+            <TabsContent value="lister" className="mt-12">
+              <div className="grid gap-6 md:gap-8 md:grid-cols-3">
+                <div className="bg-white rounded-3xl shadow-md p-6 md:p-8 flex flex-col gap-3 hover:-translate-y-1 hover:shadow-lg transition">
+                  <Feature
+                    icon={<UsersRound className="h-6 w-6" />}
+                    title="Reach More Participants"
+                    text="Your property appears in front of families, coordinators, and individuals searching for SDA homes."
+                  />
+                </div>
+                <div className="bg-white rounded-3xl shadow-md p-6 md:p-8 flex flex-col gap-3 hover:-translate-y-1 hover:shadow-lg transition">
+                  <Feature
+                    icon={<LayoutGrid className="h-6 w-6" />}
+                    title="Manage Listings Easily"
+                    text="Update your listing, manage enquiries, and track bookings all in one place."
+                  />
+                </div>
+                <div className="bg-white rounded-3xl shadow-md p-6 md:p-8 flex flex-col gap-3 hover:-translate-y-1 hover:shadow-lg transition">
+                  <Feature
+                    icon={<CircleCheck className="h-6 w-6" />}
+                    title="Approve or Decline Requests"
+                    text="Review participant enquiries and choose who stays in your accommodation."
+                  />
+                </div>
+              </div>
+            </TabsContent>
+          </Tabs>
         </div>
       </section>
 
@@ -347,7 +453,7 @@ export default function Home() {
 function Feature({ icon, title, text }) {
   return (
     <div className="flex items-start gap-4">
-      <div className="mt-1 h-8 w-8 rounded-full border border-gray-300 flex items-center justify-center">
+      <div className="mt-1 h-8 w-8 flex items-center justify-center">
         {icon}
       </div>
       <div>
